@@ -13,12 +13,12 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.GameTicking.Commands
 {
     [AdminCommand(AdminFlags.Round)]
-    public sealed class ForceMapCommand : LocalizedCommands
+    public sealed partial class ForceMapCommand : LocalizedCommands
     {
-        [Dependency] private readonly IConfigurationManager _configurationManager = default!;
-        [Dependency] private readonly IGameMapManager _gameMapManager = default!;
-        [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-        [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!; //Starlight
+        [Dependency] private IConfigurationManager _configurationManager = default!;
+        [Dependency] private IGameMapManager _gameMapManager = default!;
+        [Dependency] private IPrototypeManager _prototypeManager = default!;
+        [Dependency] private IEntitySystemManager _entitySystemManager = default!; //Starlight
         private AutoDiscordLogSystem? _autolog; //Starlight
 
         public override string Command => "setgamemap"; // Starlight-edit
@@ -28,7 +28,7 @@ namespace Content.Server.GameTicking.Commands
             _autolog ??= _entitySystemManager.GetEntitySystem<AutoDiscordLogSystem>(); //Starlight
             if (args.Length != 1)
             {
-                shell.WriteLine(Loc.GetString(Loc.GetString($"shell-need-exactly-one-argument")));
+                shell.WriteLine(Loc.GetString("shell-need-exactly-one-argument"));
                 return;
             }
 

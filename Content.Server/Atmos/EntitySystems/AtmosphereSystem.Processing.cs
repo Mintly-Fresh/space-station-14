@@ -13,7 +13,7 @@ namespace Content.Server.Atmos.EntitySystems
 {
     public sealed partial class AtmosphereSystem
     {
-        [Dependency] private readonly IGameTiming _gameTiming = default!;
+        [Dependency] private IGameTiming _gameTiming = default!;
 
         private readonly Stopwatch _simulationStopwatch = new();
 
@@ -148,7 +148,7 @@ namespace Content.Server.Atmos.EntitySystems
                 for (var i = 0; i < Atmospherics.Directions; i++)
                 {
                     var indices = tile.GridIndices.Offset((AtmosDirection) (1 << i));
-                    if (_map.TryGetTile(ent.Comp3, indices, out var gridTile) && !gridTile.IsEmpty)
+                    if (_mapSystem.TryGetTile(ent.Comp3, indices, out var gridTile) && !gridTile.IsEmpty)
                     {
                         connected = true;
                         break;
@@ -176,7 +176,7 @@ namespace Content.Server.Atmos.EntitySystems
         {
             var idx = tile.GridIndices;
             bool mapAtmosphere;
-            if (_map.TryGetTile(ent.Comp3, idx, out var gTile) && !gTile.IsEmpty)
+            if (_mapSystem.TryGetTile(ent.Comp3, idx, out var gTile) && !gTile.IsEmpty)
             {
                 var contentDef = (ContentTileDefinition) _tileDefinitionManager[gTile.TypeId];
                 mapAtmosphere = contentDef.MapAtmosphere;

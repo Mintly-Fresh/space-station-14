@@ -1,4 +1,3 @@
-using Content.Server.Revolutionary.Components;
 using Content.Shared.Revolutionary.Components;
 using Content.Server.Store.Systems;
 using Content.Shared.Implants;
@@ -8,17 +7,23 @@ using Content.Server.Popups;
 using Content.Shared.Popups;
 using Content.Shared.IdentityManagement;
 using Content.Server.RoundEnd;
-using Content.Shared.Implants.Components;
-
+using Content.Shared._Starlight.Implants.Components;
 using Content.Server.GameTicking.Rules;
-namespace Content.Server.Implants;
-public sealed class USSPUplinkSystem : EntitySystem
+using Content.Server.Implants;
+using Content.Shared._Starlight.Revolutionary.Components;
+using Content.Shared._Starlight.Store.Conditions;
+using Content.Server._Starlight.Revolutionary.Components;
+using Content.Shared.Store;
+using Robust.Shared.Prototypes;
+
+namespace Content.Server._Starlight.Implants;
+public sealed partial class USSPUplinkSystem : EntitySystem
 {
-    [Dependency] private readonly StoreSystem _storeSystem = default!;
-    [Dependency] private readonly IEntityManager _entityManager = default!;
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly RevolutionaryRuleSystem _rev = default!;
-    [Dependency] private readonly SubdermalImplantSystem _implant = default!;
+    [Dependency] private StoreSystem _storeSystem = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
+    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private RevolutionaryRuleSystem _rev = default!;
+    [Dependency] private SubdermalImplantSystem _implant = default!;
 
     public override void Initialize()
     {
@@ -43,7 +48,7 @@ public sealed class USSPUplinkSystem : EntitySystem
     private void ResetUplinkStocks()
     {
         // Use reflection to access the private static dictionaries in StockLimitedListingCondition
-        var type = typeof(Content.Shared.Store.Conditions.StockLimitedListingCondition);
+        var type = typeof(StockLimitedListingCondition);
 
         // Get the _stockCounts dictionary
         var stockCountsField = type.GetField("_stockCounts",
@@ -241,7 +246,7 @@ public sealed class USSPUplinkSystem : EntitySystem
             if (originalOwner != null && originalOwner.Value != args.Implanted)
             {
                 // Only change ownership if the implanted entity is a head revolutionary
-                var uplinkOwnerComp = EnsureComp<Content.Shared.Implants.Components.USSPUplinkOwnerComponent>(uid);
+                var uplinkOwnerComp = EnsureComp<USSPUplinkOwnerComponent>(uid);
                 uplinkOwnerComp.OwnerUid = args.Implanted;
 
                 // Notify the original owner that their uplink has been claimed by another head revolutionary
@@ -345,7 +350,7 @@ public sealed class USSPUplinkSystem : EntitySystem
                 if (originalOwner != null)
                 {
                     // Find all uplinks owned by this head revolutionary
-                    var uplinkQuery = EntityManager.EntityQueryEnumerator<Content.Shared.Implants.Components.USSPUplinkOwnerComponent, StoreComponent>();
+                    var uplinkQuery = EntityManager.EntityQueryEnumerator<USSPUplinkOwnerComponent, StoreComponent>();
                     while (uplinkQuery.MoveNext(out var uplinkOwnerOwner, out var uplinkOwner, out var uplinkStore))
                     {
                         if (uplinkOwner.OwnerUid == originalOwner && uplinkOwnerOwner != uid)
@@ -504,7 +509,7 @@ public sealed class USSPUplinkSystem : EntitySystem
                 }
 
                 // Add the Conversion currency back
-                var currencyToAdd = new Dictionary<string, FixedPoint2> { { "Conversion", spentAmount } };
+                var currencyToAdd = new Dictionary<ProtoId<CurrencyPrototype>, FixedPoint2> { { "Conversion", spentAmount } };
                 _storeSystem.TryAddCurrency(currencyToAdd, args.StoreUid);
             }
         }
@@ -515,7 +520,7 @@ public sealed class USSPUplinkSystem : EntitySystem
         {
             foreach (var condition in args.PurchasedItem.Conditions)
             {
-                if (condition is Content.Shared.Store.Conditions.StockLimitedListingCondition)
+                if (condition is StockLimitedListingCondition)
                 {
                     isStockLimited = true;
                     break;
@@ -552,7 +557,7 @@ public sealed class USSPUplinkSystem : EntitySystem
         // Add Conversion to all uplinks
         foreach (var uplinkEntity in uplinkEntities)
         {
-            var currencyToAdd = new Dictionary<string, FixedPoint2> { { "Conversion", FixedPoint2.New(1) } };
+            var currencyToAdd = new Dictionary<ProtoId<CurrencyPrototype>, FixedPoint2> { { "Conversion", FixedPoint2.New(1) } };
             var success = storeSystem.TryAddCurrency(currencyToAdd, uplinkEntity);
         }
 

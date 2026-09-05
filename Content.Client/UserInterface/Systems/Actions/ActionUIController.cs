@@ -39,12 +39,12 @@ using static Robust.Shared.Input.Binding.PointerInputCmdHandler;
 
 namespace Content.Client.UserInterface.Systems.Actions;
 
-public sealed class ActionUIController : UIController, IOnStateChanged<GameplayState>, IOnSystemChanged<ActionsSystem>
+public sealed partial class ActionUIController : UIController, IOnStateChanged<GameplayState>, IOnSystemChanged<ActionsSystem>
 {
-    [Dependency] private readonly IOverlayManager _overlays = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
-    [Dependency] private readonly IInputManager _input = default!;
+    [Dependency] private IOverlayManager _overlays = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPlayerManager _playerManager = default!;
+    [Dependency] private IInputManager _input = default!;
 
     [UISystemDependency] private readonly ActionsSystem? _actionsSystem = default;
     [UISystemDependency] private readonly InteractionOutlineSystem? _interactionOutline = default;
@@ -91,7 +91,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private void OnScreenLoad()
     {
-       LoadGui();
+        LoadGui();
     }
 
     private void OnScreenUnload()
@@ -269,6 +269,14 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
         if (actionId == SelectingTargetFor)
             StopTargeting();
+
+        // Starlight Begin
+        // End a drag on this action's own button now, before a hotbar rebuild can remove it from
+        // the tree. A removed control never gets its mouse-up delivered, which would otherwise
+        // orphan the drag shadow with no client-side way to clear it.
+        if (_menuDragHelper.Dragged?.Action?.Owner == actionId)
+            _menuDragHelper.EndDrag();
+        // Starlight End
 
         _actions.RemoveAll(x => x == actionId);
     }

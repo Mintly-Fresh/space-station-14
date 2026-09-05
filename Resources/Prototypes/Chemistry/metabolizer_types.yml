@@ -9,6 +9,10 @@
   id: Bloodsucker
   name: metabolizer-type-bloodsucker
 
+- type: metabolizerType #🌟Starlight🌟
+  id: Doll
+  name: metabolizer-type-doll
+
 - type: metabolizerType
   id: Dragon
   name: metabolizer-type-dragon
@@ -20,22 +24,6 @@
 - type: metabolizerType
   id: Slime
   name: metabolizer-type-slime
-
-- type: metabolizerType #🌟Starlight🌟
-  id: Cyclorite
-  name: metabolizer-type-cyclorite
-
-- type: metabolizerType #🌟Starlight🌟
-  id: Avali
-  name: metabolizer-type-avali
-
-- type: metabolizerType #🌟Starlight🌟
-  id: Resomi
-  name: metabolizer-type-resomi
-
-- type: metabolizerType #🌟Starlight🌟
-  id: Rodentia
-  name: metabolizer-type-rodentia
 
 - type: metabolizerType
   id: Vox
@@ -60,11 +48,3 @@
 - type: metabolizerType
   id: Arachnid
   name: metabolizer-type-arachnid
-
-- type: metabolizerType
-  id: Vampire
-  name: metabolizer-type-vampire
-
-- type: metabolizerType #Starlight
-  id: BudgetCyber
-  name: metabolizer-type-budget-cyber

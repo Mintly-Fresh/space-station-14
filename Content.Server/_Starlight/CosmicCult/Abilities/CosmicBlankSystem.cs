@@ -5,7 +5,6 @@ using Content.Server.Popups;
 using Content.Shared._Starlight.CosmicCult;
 using Content.Shared._Starlight.CosmicCult.Components;
 using Content.Shared._Starlight.CosmicCult.Components.Examine;
-using Content.Shared._Starlight.NullSpace;
 using Content.Shared.DoAfter;
 using Content.Shared.Effects;
 using Content.Shared.IdentityManagement;
@@ -19,6 +18,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared._Starlight.NullSpace.Components;
 
 namespace Content.Server._Starlight.CosmicCult.Abilities;
 
@@ -123,7 +123,9 @@ public sealed partial class CosmicBlankSystem : EntitySystem
 
         _popup.PopupEntity(Loc.GetString("cosmicability-blank-success", ("target", Identity.Entity(target, EntityManager))), uid, uid);
         var tgtpos = Transform(target).Coordinates;
-        var mindEnt = mindContainer.Mind.Value;
+        if (mindContainer.Mind is not { } mindEnt)
+            return;
+
         var mind = Comp<MindComponent>(mindEnt);
         var comp = uid.Comp;
         mind.PreventGhosting = true;

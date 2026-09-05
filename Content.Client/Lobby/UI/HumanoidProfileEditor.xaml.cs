@@ -30,6 +30,7 @@ using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
+using Robust.Client.Utility;
 using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Enums;
@@ -37,11 +38,13 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 #region Starlight
-using Content.Shared.Starlight.CCVar;
-using Content.Shared.Starlight.TextToSpeech;
-using Content.Client._Starlight.TTS;
+using Content.Shared._Starlight.CCVar;
+using Content.Shared._Starlight.TextToSpeech;
 using Content.Shared._Starlight.Traits;
 using Content.Client._Starlight.Lobby.UI;
+using Content.Client._Starlight.TextToSpeech;
+using Content.Shared._Starlight.Humanoid;
+using Content.Client._Starlight.Humanoid;
 #endregion Starlight
 
 namespace Content.Client.Lobby.UI
@@ -74,6 +77,7 @@ namespace Content.Client.Lobby.UI
         private LoadoutWindow? _loadoutWindow;
 
         private bool _exporting;
+        private bool _imaging;
 
         /// <summary>
         /// If we're attempting to save.
@@ -117,6 +121,8 @@ namespace Content.Client.Lobby.UI
         private readonly List<(string, RequirementsSelector)> _jobPriorities = new();
 
         private readonly Dictionary<string, BoxContainer> _jobCategories = new();
+
+        private Direction _previewRotation = Direction.North;
 
         private readonly ColorSelectorSliders _rgbSkinColorSelector = new();
 
@@ -180,6 +186,15 @@ namespace Content.Client.Lobby.UI
             ICInfoTab.Visible = _allowFlavorText || _allowExploitables || _allowCharacterSecrets;
             //end starlight
 
+            //begin starlight
+            _allowCharacterSecrets = _cfgManager.GetCVar(StarlightCCVars.ICSecrets);
+            _allowExploitables = _cfgManager.GetCVar(StarlightCCVars.ExploitableSecrets);
+            _allowRPNotes = _cfgManager.GetCVar(StarlightCCVars.OOCNotes);
+
+            OOCInfoTab.Visible = _allowRPNotes;
+            ICInfoTab.Visible = _allowFlavorText || _allowExploitables || _allowCharacterSecrets;
+            //end starlight
+
             ImportButton.OnPressed += args =>
             {
                 ImportProfile();
@@ -192,7 +207,7 @@ namespace Content.Client.Lobby.UI
 
             ExportImageButton.OnPressed += args =>
             {
-                Preview.ExportImage(args.Button);
+                ExportImage();
             };
 
             OpenImagesButton.OnPressed += args =>
@@ -211,6 +226,9 @@ namespace Content.Client.Lobby.UI
             };
 
             Traits.OnTraitsChanged += OnTraitsSelectionChanged; // Starlight
+
+            Antags.OnAntagsChanged += OnAntagsSelectionChanged; // Moffstation
+            Antags.OnLoadoutPressed += OnAntagLoadoutPressed; // Moffstation
 
             #region Left
 
@@ -505,6 +523,18 @@ namespace Content.Client.Lobby.UI
                 Markings.CurrentEyeColor = Profile.Appearance.EyeColor;
                 ReloadProfilePreview();
             };
+
+            //starlight start
+            EyeColorPicker.OnGlowingChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithEyeGlowing(newColor));
+                Markings.CurrentEyeColor = Profile.Appearance.EyeColor;
+                ReloadProfilePreview();
+            };
+            //starlight end
             //starlight end
 
             #endregion Eyes
@@ -542,7 +572,18 @@ namespace Content.Client.Lobby.UI
 
             #region Dummy
 
-            Preview.Initialize(this, _entManager, _preferencesManager, _prototypeManager, _playerManager);
+            SpriteView.Initialize(_preferencesManager, _prototypeManager, _playerManager);
+
+            SpriteRotateLeft.OnPressed += _ =>
+            {
+                _previewRotation = _previewRotation.TurnCw();
+                SetPreviewRotation(_previewRotation);
+            };
+            SpriteRotateRight.OnPressed += _ =>
+            {
+                _previewRotation = _previewRotation.TurnCcw();
+                SetPreviewRotation(_previewRotation);
+            };
 
             #endregion Dummy
 
@@ -910,9 +951,12 @@ namespace Content.Client.Lobby.UI
             }
         }
 
+        #region Starlight
         public void RefreshAntags()
         {
-            AntagList.RemoveAllChildren();
+            var renderedAntags = Antags.RefreshAntags(Profile); // Starlight
+            UpdateAntagPreferences(renderedAntags); // Starlight
+            /*AntagList.RemoveAllChildren();
             var items = new[]
             {
                 ("humanoid-profile-editor-antag-preference-yes-button", 0),
@@ -1018,8 +1062,64 @@ namespace Content.Client.Lobby.UI
                 // Starlight ENd
 
                 AntagList.AddChild(antagContainer);
-            }
+            }*/
         }
+        private void OnAntagsSelectionChanged(HashSet<ProtoId<AntagPrototype>> antags)
+        {
+            if (UpdateAntagPreferences(antags))
+                ReloadPreview();
+        }
+
+        private bool UpdateAntagPreferences(IEnumerable<ProtoId<AntagPrototype>> antags)
+        {
+            if (Profile is null)
+                return false;
+
+            var selectedAntags = antags.ToHashSet();
+
+            if (selectedAntags.SetEquals(Profile.AntagPreferences))
+                return false;
+
+            Profile = Profile.WithAntagPreferences(selectedAntags);
+            SetDirty();
+            return true;
+        }
+
+        private void OnAntagLoadoutPressed(ProtoId<AntagPrototype> antagId)
+        {
+            if (Profile is null ||
+                !_prototypeManager.TryIndex<AntagPrototype>(antagId, out var antag))
+            {
+                return;
+            }
+
+            var antagLoadoutId = antag.RoleLoadout?.FirstOrDefault();
+
+            if (antagLoadoutId == null ||
+                !_prototypeManager.TryIndex<RoleLoadoutPrototype>(
+                    antagLoadoutId.Value,
+                    out var roleLoadoutProto))
+            {
+                return;
+            }
+
+            RoleLoadout? loadout = null;
+            Profile.Loadouts.TryGetValue(roleLoadoutProto.ID, out loadout);
+            loadout = loadout?.Clone();
+
+            if (loadout == null)
+            {
+                loadout = new RoleLoadout(roleLoadoutProto.ID);
+                loadout.SetDefault(
+                    Profile,
+                    _playerManager.LocalSession,
+                    _prototypeManager,
+                    force: true);
+            }
+
+            OpenAntagLoadout(antag, loadout, roleLoadoutProto);
+        }
+        #endregion
 
         private void SetDirty()
         {
@@ -1050,7 +1150,11 @@ namespace Content.Client.Lobby.UI
         /// </remarks>
         private void ReloadPreview()
         {
-            Preview.ReloadPreview();
+            if (Profile == null)
+                return;
+
+            SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
+
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();
         }
@@ -1068,6 +1172,7 @@ namespace Content.Client.Lobby.UI
         /// </summary>
         public void SetProfile(HumanoidCharacterProfile? profile, int? slot)
         {
+            SpriteView.Initialize(_preferencesManager, _prototypeManager, _playerManager);
             Profile = profile?.Clone();
             CharacterSlot = slot;
             IsDirty = false;
@@ -1106,7 +1211,6 @@ namespace Content.Client.Lobby.UI
             _recordsTab.Update(Profile); // Refresh record editor when a profile is loaded
             // Cosmatic Drift Record System-end
             RefreshCharacterInfo(); //starlight
-            Preview.Initialize(this, _entManager, _preferencesManager, _prototypeManager, _playerManager);
             ReloadPreview();
         }
 
@@ -1129,7 +1233,11 @@ namespace Content.Client.Lobby.UI
         /// </summary>
         private void ReloadProfilePreview()
         {
-            Preview.ReloadProfilePreview();
+            if (Profile == null)
+                return;
+
+            SpriteView.ReloadProfilePreview(Profile);
+
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();
         }
@@ -1271,7 +1379,7 @@ namespace Content.Client.Lobby.UI
                     }
                     description.AddMessage(!reason.IsEmpty ? reason : FormattedMessage.FromMarkupPermissive(Loc.GetString("job-no-requirements")));
 
-                    selector.Setup(items, job.LocalizedName, 200, description, icon, job.Guides);
+                    selector.Setup(items, job.LocalizedName, 210, description, icon, job.Guides); // Starlight-edit: account for longer job names to keep alignment (NTR for example)
 
                     if (!allowed)
                     {
@@ -1583,6 +1691,12 @@ namespace Content.Client.Lobby.UI
             _loadoutWindow = null;
         }
 
+        protected override void EnteredTree()
+        {
+            base.EnteredTree();
+            ReloadPreview();
+        }
+
         private void SetAge(int newAge)
         {
             Profile = Profile?.WithAge(newAge);
@@ -1658,6 +1772,7 @@ namespace Content.Client.Lobby.UI
             Markings.SetSpecies(newSpecies); // Repopulate the markings tab as well.
             // In case there's job restrictions for the species
             RefreshJobs();
+            RefreshAntags(); // Starlight
             // In case there's species restrictions for loadouts
             RefreshLoadouts();
             UpdateSexControls(); // update sex for new species
@@ -1675,7 +1790,6 @@ namespace Content.Client.Lobby.UI
             if (!IsDirty)
                 return;
 
-            ReloadPreview();
         }
 
         // Starlight - Start
@@ -2021,6 +2135,11 @@ namespace Content.Client.Lobby.UI
             ResetButton.Disabled = Profile is null || !IsDirty;
         }
 
+        private void SetPreviewRotation(Direction direction)
+        {
+            SpriteView.OverrideDirection = (Direction) ((int) direction % 4 * 2);
+        }
+
         private void RandomizeEverything()
         {
             Profile = HumanoidCharacterProfile.Random();
@@ -2034,6 +2153,19 @@ namespace Content.Client.Lobby.UI
             var name = HumanoidCharacterProfile.GetName(Profile.Species, Profile.Gender);
             SetName(name);
             UpdateNameEdit();
+        }
+
+        private async void ExportImage()
+        {
+            if (_imaging)
+                return;
+
+            var dir = SpriteView.OverrideDirection ?? Direction.South;
+
+            // I tried disabling the button but it looks sorta goofy as it only takes a frame or two to save
+            _imaging = true;
+            await _entManager.System<ContentSpriteSystem>().Export(SpriteView.PreviewDummy, dir, includeId: false);
+            _imaging = false;
         }
 
         private async void ImportProfile()

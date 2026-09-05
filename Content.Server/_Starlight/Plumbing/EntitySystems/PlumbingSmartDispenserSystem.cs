@@ -24,7 +24,7 @@ namespace Content.Server._Starlight.Plumbing.EntitySystems;
 ///     stores up to a per-reagent cap, supports held container dispensing and label matching dispensing
 /// </summary>
 [UsedImplicitly]
-public sealed class PlumbingSmartDispenserSystem : EntitySystem
+public sealed partial class PlumbingSmartDispenserSystem : EntitySystem
 {
     private sealed class ActorUiState
     {
@@ -32,12 +32,12 @@ public sealed class PlumbingSmartDispenserSystem : EntitySystem
         public ReagentDispenserDispenseAmount DispenseAmount = ReagentDispenserDispenseAmount.U10;
     }
 
-    [Dependency] private readonly HandsSystem _hands = default!;
-    [Dependency] private readonly InjectorSystem _injectorSystem = default!;
-    [Dependency] private readonly SharedSolutionContainerSystem _solutionSystem = default!;
-    [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private HandsSystem _hands = default!;
+    [Dependency] private InjectorSystem _injectorSystem = default!;
+    [Dependency] private SharedSolutionContainerSystem _solutionSystem = default!;
+    [Dependency] private UserInterfaceSystem _uiSystem = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
 
     /// <summary>
     /// Cached mapping of label prefix (lowercase) → reagent prototype ID.
@@ -202,7 +202,7 @@ public sealed class PlumbingSmartDispenserSystem : EntitySystem
         if (!_solutionSystem.TryGetFitsInDispenser(targetContainer, out var targetEnt, out _)
             && !_solutionSystem.TryGetRefillableSolution(targetContainer, out targetEnt, out _)
             && (!TryComp<InjectorComponent>(targetContainer, out var injector)
-                || !TryComp<SolutionContainerManagerComponent>(targetContainer, out var manager)
+                || !TryComp<SolutionManagerComponent>(targetContainer, out var manager)
                 || !_solutionSystem.TryGetSolution((targetContainer, manager), injector.SolutionName, out targetEnt, out _)))
         {
             UpdateActorUiState(ent, actor);
@@ -457,7 +457,7 @@ public sealed class PlumbingSmartDispenserSystem : EntitySystem
         if (!_solutionSystem.TryGetFitsInDispenser(targetContainer, out var targetEnt, out var targetSolution)
             && !_solutionSystem.TryGetRefillableSolution(targetContainer, out targetEnt, out targetSolution)
             && (!TryComp<InjectorComponent>(targetContainer, out var injector)
-                || !TryComp<SolutionContainerManagerComponent>(targetContainer, out var manager)
+                || !TryComp<SolutionManagerComponent>(targetContainer, out var manager)
                 || !_solutionSystem.TryGetSolution((targetContainer, manager), injector.SolutionName, out targetEnt, out targetSolution)))
         {
             return false;
@@ -516,7 +516,7 @@ public sealed class PlumbingSmartDispenserSystem : EntitySystem
         if (!_solutionSystem.TryGetFitsInDispenser(container.Value, out _, out var solution)
             && !_solutionSystem.TryGetRefillableSolution(container.Value, out _, out solution)
             && (!TryComp<InjectorComponent>(container.Value, out var injector)
-                || !TryComp<SolutionContainerManagerComponent>(container.Value, out var manager)
+                || !TryComp<SolutionManagerComponent>(container.Value, out var manager)
                 || !_solutionSystem.TryGetSolution((container.Value, manager), injector.SolutionName, out _, out solution)))
         {
             return null;

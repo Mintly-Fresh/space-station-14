@@ -5,6 +5,7 @@ using Content.Server.DeviceNetwork.Systems;
 using Content.Server.Popups;
 using Content.Server.Power.Components;
 using Content.Server.Tools;
+using Content.Shared._Starlight.DocumentManager;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Database;
@@ -45,29 +46,31 @@ using Robust.Shared.Utility;
 
 namespace Content.Server.Fax;
 
-public sealed class FaxSystem : EntitySystem
+public sealed partial class FaxSystem : EntitySystem
 {
-    [Dependency] private readonly IChatManager _chat = default!;
-    [Dependency] private readonly IAdminManager _adminManager = default!;
-    [Dependency] private readonly ItemSlotsSystem _itemSlotsSystem = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearanceSystem = default!;
-    [Dependency] private readonly PopupSystem _popupSystem = default!;
-    [Dependency] private readonly DeviceNetworkSystem _deviceNetworkSystem = default!;
-    [Dependency] private readonly PaperSystem _paperSystem = default!;
-    [Dependency] private readonly LabelSystem _labelSystem = default!;
-    [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
-    [Dependency] private readonly ToolSystem _toolSystem = default!;
-    [Dependency] private readonly QuickDialogSystem _quickDialog = default!;
-    [Dependency] private readonly UserInterfaceSystem _userInterface = default!;
-    [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
-    [Dependency] private readonly FaxecuteSystem _faxecute = default!;
-    [Dependency] private readonly EmagSystem _emag = default!;
+    [Dependency] private IChatManager _chat = default!;
+    [Dependency] private IAdminManager _adminManager = default!;
+    [Dependency] private ItemSlotsSystem _itemSlotsSystem = default!;
+    [Dependency] private SharedAppearanceSystem _appearanceSystem = default!;
+    [Dependency] private PopupSystem _popupSystem = default!;
+    [Dependency] private DeviceNetworkSystem _deviceNetworkSystem = default!;
+    [Dependency] private PaperSystem _paperSystem = default!;
+    [Dependency] private LabelSystem _labelSystem = default!;
+    [Dependency] private SharedAudioSystem _audioSystem = default!;
+    [Dependency] private ToolSystem _toolSystem = default!;
+    [Dependency] private QuickDialogSystem _quickDialog = default!;
+    [Dependency] private UserInterfaceSystem _userInterface = default!;
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private FaxecuteSystem _faxecute = default!;
+    [Dependency] private EmagSystem _emag = default!;
 
     #region Starlight
     [Dependency] private IPrototypeManager _proto = default!;
     [Dependency] private InventorySystem _inventory = default!;
     [Dependency] private SharedTimeSystem _time = default!;
+    [Dependency] private PreWrittenDocumentManager _documentManager = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
     #endregion
 
     private static readonly ProtoId<ToolQualityPrototype> ScrewingQuality = "Screwing";
@@ -365,7 +368,20 @@ public sealed class FaxSystem : EntitySystem
     private void OnCopyButtonPressed(EntityUid uid, FaxMachineComponent component, FaxCopyMessage args)
     {
         if (HasComp<MobStateComponent>(component.PaperSlot.Item))
+        {
             _faxecute.Faxecute(uid, component); // when button pressed it will hurt the mob.
+
+            // Starlight-edit
+            var printout = TryGetFaxablePrintout(component.PaperSlot.Item, component);
+            if (printout != null)
+            {
+                if (component.SendTimeoutRemaining > 0) return;
+                component.PrintingQueue.Enqueue(printout);
+                UpdateUserInterface(uid, component);
+                component.SendTimeoutRemaining += component.SendTimeout;
+            }
+            // Starlight-edit
+        }
         else
             Copy(uid, component, args);
     }
@@ -373,7 +389,11 @@ public sealed class FaxSystem : EntitySystem
     private void OnSendButtonPressed(EntityUid uid, FaxMachineComponent component, FaxSendMessage args)
     {
         if (HasComp<MobStateComponent>(component.PaperSlot.Item))
-            _faxecute.Faxecute(uid, component); // when button pressed it will hurt the mob.
+        {
+            // Starlight-edit
+            if(SendFaxablePrintout(uid, component)) _faxecute.Faxecute(uid, component);
+            // Starlight-edit
+        }
         else
             Send(uid, component, args);
     }
@@ -659,8 +679,14 @@ public sealed class FaxSystem : EntitySystem
 
         var printout = component.PrintingQueue.Dequeue();
 
-        var entityToSpawn = printout.PrototypeId.Length == 0 ? component.PrintPaperId.ToString() : printout.PrototypeId;
-        var printed = Spawn(entityToSpawn, Transform(uid).Coordinates);
+        var entityToSpawn = component.PrintPaperId;
+        // Starlight start
+        var xform = Transform(uid);
+        var coords = _container.TryGetOuterContainer(uid, xform, out var outerContainer)
+            ? Transform(outerContainer.Owner).Coordinates
+            : xform.Coordinates;
+        var printed = Spawn(entityToSpawn, coords);
+        // Starlight end
 
         if (TryComp<PaperComponent>(printed, out var paper))
         {
@@ -789,6 +815,52 @@ public sealed class FaxSystem : EntitySystem
         """;
         return string.Format(MetaFormat, payload.MetaSentAt, FormattedMessage.EscapeText(payload.MetaSender ?? ""),
             currentTime, FormattedMessage.EscapeText(comp.FaxName), content);
+    }
+
+    private FaxPrintout? TryGetFaxablePrintout(EntityUid? item, FaxMachineComponent component)
+    {
+        if (item is not { } sendEntity ||
+            !TryComp<FaxableObjectComponent>(sendEntity, out var faxable) ||
+            string.IsNullOrEmpty(faxable.OutputtingText))
+            return null;
+
+        return !_documentManager.TryGetDocumentContents(faxable.OutputtingText, out var text)
+            ? null
+            : new FaxPrintout(
+                text,
+                Loc.GetString("fax-machine-printed-paper-name"),
+                prototypeId: component.PrintPaperId,
+                retainMetadata: true);
+    }
+
+    private bool SendFaxablePrintout(EntityUid uid, FaxMachineComponent component)
+    {
+        var printout = TryGetFaxablePrintout(component.PaperSlot.Item, component);
+        if (printout == null)
+            return false;
+
+        if (component.SendTimeout > 0) return false;
+
+        if (component.DestinationFaxAddress == null ||
+            !component.KnownFaxes.ContainsKey(component.DestinationFaxAddress))
+            return false;
+
+        var payload = new NetworkPayload()
+        {
+            { DeviceNetworkConstants.Command, FaxConstants.FaxPrintCommand },
+            { FaxConstants.FaxPaperNameData, printout.Name },
+            { FaxConstants.FaxPaperContentData, printout.Content },
+            { FaxConstants.FaxPaperPrototypeData, printout.PrototypeId },
+            { FaxConstants.FaxPaperLockedData, false },
+            { FaxConstants.FaxMetaSender, component.FaxName },
+            { FaxConstants.FaxMetaSentAt, GetTimeStamp() }
+        };
+
+        _deviceNetworkSystem.QueuePacket(uid, component.DestinationFaxAddress, payload);
+        _audioSystem.PlayPvs(component.SendSound, uid);
+        component.SendTimeoutRemaining += component.SendTimeout;
+        UpdateUserInterface(uid, component);
+        return true;
     }
 
     private void UpdateMachineConfigureUserInterface(EntityUid uid, FaxMachineComponent? component = null)

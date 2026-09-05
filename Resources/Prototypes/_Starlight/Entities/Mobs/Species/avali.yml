@@ -66,7 +66,6 @@
       prototype: Avali
       requiredLegs: 2
     - type: Butcherable
-      butcheringType: Spike
       spawned:
         - id: FoodMeatChicken
           amount: 3
@@ -112,7 +111,7 @@
       bloodReferenceSolution:
         reagents:
         - ReagentId: AvaliBlood
-          Quantity: 300
+          Quantity: 600
     - type: MeleeWeapon
       soundHit:
         path: /Audio/Weapons/pierce.ogg
@@ -134,6 +133,8 @@
       bleedHealPerUpdate: 1.0
       critHealingModifier: 0.5
       stasisDamageReduction: 0.7
+      healingThreshold: 50.0
+      stasisHealth: 50.0
 
 # Chirp!
 # Chirp!

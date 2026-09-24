@@ -237,3 +237,12 @@
     sprite: /Textures/_Starlight/Interface/language_icon.rsi
     state: squeakish
   allowSelection: false
+
+  - type: jobIcon
+  parent: JobIcon
+  id: LanguageIconVespic
+  icon:
+    sprite: /Textures/_Starlight/Interface/language_icon.rsi
+    state: vespic
+  allowSelection: false
+

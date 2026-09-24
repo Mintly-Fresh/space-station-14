@@ -40,6 +40,7 @@
       - Darktongue
       - Lagomorphian
       - Squeakish
+      - Vespic
       understands:
       - GalacticCommon
       - Scratch
@@ -62,6 +63,7 @@
       - Darktongue
       - Lagomorphian
       - Squeakish
+      - Vespic
   # Starlight end
 
 - type: startingGear

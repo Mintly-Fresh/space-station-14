@@ -150,3 +150,6 @@ language-Xenomind-description = Various minds of xenos and terrors.
 
 language-Squeakish-name = Squeakish
 language-Squeakish-description = The language of the Rodentia, made up of a series of chirps and squeaks.
+
+language-Vespic-name = Vespic
+language-Vespic-description = The language of the Vespuli, consisting of erratic vibrations.

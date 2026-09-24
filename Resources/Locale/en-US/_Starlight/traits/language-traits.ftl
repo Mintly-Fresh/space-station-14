@@ -65,3 +65,6 @@ trait-language-lagomorphian-desc = The lynarxical tongue, developed as an integr
 
 trait-language-squeakish-name = Squeakish
 trait-language-squeakish-desc = You can speak Squeakish, the language of the Rodentia, which is made up of a series of chirps and squeaks.
+
+trait-language-vespic-name = Vespic
+trait-language-vespic-description = The language of the Vespuli, consisting of erratic vibrations.

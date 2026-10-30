@@ -153,3 +153,6 @@ language-Squeakish-description = The language of the Rodentia, made up of a seri
 
 language-Vespic-name = Vespic
 language-Vespic-description = The language of the Vespuli, consisting of erratic vibrations.
+
+language-Vibralink-name = Vibralink
+language-Vibralink-description = A communication between Vespuli and Bees via long range vibrations.

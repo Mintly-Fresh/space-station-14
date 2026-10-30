@@ -190,3 +190,40 @@
   flavor: cinnamon
   color: "#7b330c"
   recognizable: true
+
+- type: reagent
+  id: Honey
+  name: reagent-name-honey
+  group: Foods
+  desc: reagent-desc-honey
+  physicalDesc: reagent-physical-desc-honey
+  flavor: sweet
+  color: "#C08932"
+  viscosity: 0.55 #Start using syrup to attach your remote recievers to your microwaves!
+  tileReactions:
+    - !type:SpillTileReaction
+  metabolisms:
+    Digestion:
+      effects:
+      # Starlight edit start - Make food 50% less effective for dwarfs
+      - !type:SatiateHunger
+        factor: 3.0
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Dwarf ]
+      - !type:SatiateHunger
+        factor: 6.0
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Dwarf ]
+          inverted: true
+      # Starlight edit end
+      - !type:HealthChange
+        damage:
+          groups:
+            Toxin: -0.5
+  pricePerUnit: 5
+  footstepSound:
+    collection: FootstepSlime
+    params:
+      volume: 6

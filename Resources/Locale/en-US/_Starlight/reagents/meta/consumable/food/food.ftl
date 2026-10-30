@@ -21,3 +21,6 @@ reagent-physical-desc-mint-extract = minty
 reagent-name-cinnamon = Cinnamon
 reagent-desc-cinnamon = One of the spices of life. Do not try a spoonful raw.
 reagent-physical-desc-cinnamon = cinnamony
+reagent-name-honey = honey
+reagent-desc-honey = Sticky sweet. Not recommended as a glue substitute.
+reagent-physical-desc-honey = gooey

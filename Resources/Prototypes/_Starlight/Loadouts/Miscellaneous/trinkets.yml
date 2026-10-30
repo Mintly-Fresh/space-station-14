@@ -713,6 +713,21 @@
   groupBy: "maid outfit"
 
 - type: loadout
+  id: EdgerunnerJacket
+  effects:
+    - !type:JobRequirementLoadoutEffect
+      requirement:
+        !type:RoleTimeRequirement
+        role: JobParamedic
+        time: 72000 #20 hr
+    - !type:JobRequirementLoadoutEffect
+      requirement:
+        !type:OverallPlaytimeRequirement
+        time: 144000 # 40 hr
+  equipment:
+    outerClothing: ClothingOuterEdgerunnerJacket
+
+- type: loadout
   id: TreasureCoinIron
   storage:
     back:
@@ -926,3 +941,20 @@
     - TowelColorGold
   groupBy: "towels"
 
+- type: loadout
+  id: ClothingMaskBreathTube
+  equipment:
+    mask: ClothingMaskBreathTube
+
+
+- type: loadout
+  id: RadioHandheldStation
+  effects:
+    - !type:JobRequirementLoadoutEffect
+      requirement:
+        !type:RoleTimeRequirement
+        role: JobRadioHost
+        time: 1h
+  storage:
+    pocket1:
+      - RadioHandheldStation

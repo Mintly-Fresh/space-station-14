@@ -65,21 +65,22 @@
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Possession or Use of Minor Contraband (2)
+        Possession or Use of a Category 2 Controlled Item (2)
       </Box>
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Possession: Major (2)
-      </Box>
-    </ColorBox>
-    <ColorBox>
-      <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
+        Smuggling (2)
       </Box>
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Possession: Significant Syndicate (2)
+        Possession or Use of a Category 3 Controlled Item (2)
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#2f3832">
+      <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
+        Possession or Use of a Category 4 or 5 Controlled Item (2)
       </Box>
     </ColorBox>
     <ColorBox>
@@ -407,7 +408,7 @@
 
   1. Failure to Comply, Breach of Arrest, Breach of Custody, Refusal of Mental Shielding
 
-  2. Possession or Use of Minor Contraband, Major Contraband, or Significant Syndicate Contraband
+  2. Possession or Use of a Category 2, 3, 4 or 5 Controlled Item
 
   3. Petty Theft, Grand Theft, and Armed Robbery
 
@@ -446,12 +447,12 @@
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Possession or Use of Minor Contraband
+        Possession or Use of a Category 2 Controlled Item
       </Box>
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To make, hold, or use minor contraband without authorization. Authorization may only be granted by the Warden, the Head of Security, or the Captain.
+        To make, hold, or use contraband of Tier 2 without authorization. Permits for these items can be granted by the head of the related department, the Warden, the Head of Security, as well as the Captain.
       </Box>
     </ColorBox>
     <ColorBox Color="#2e422e">
@@ -531,12 +532,12 @@
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Possession/Use of Major Contraband
+        Smuggling
       </Box>
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To make, hold, or use major contraband without authorization. Authorization may only be granted by the Warden, the Head of Security, or the Captain. Any items restricted to a Department or Job are considered major contraband.
+        To provide for another individual any controlled item or substance that the receiver lacks permission to possess.
       </Box>
     </ColorBox>
     <ColorBox Color="#453a59">
@@ -634,6 +635,16 @@
         To steal something with the threat of violence using anything that can be considered a weapon, whether or not the weapon is contraband or not. This can include knives, toolboxes, crowbars, or any number of other improvised weaponry. There must be an active threat of violence, or the implication of violence if the victim does not comply, in order to be considered armed robbery.
       </Box>
     </ColorBox>
+    <ColorBox Color="#2f3832">
+      <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
+        Possession or Use of a Category 3 Controlled Item
+      </Box>
+    </ColorBox>
+    <ColorBox Color="#2f3832">
+      <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
+        To make, hold, or use contraband of tier 3 without authorization. Permits for these items can be granted by the head of the related department, the Head of Security, as well as the Captain.
+      </Box>
+    </ColorBox>
     <ColorBox Color="#475c7d">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
         Sedition
@@ -721,7 +732,7 @@
     </ColorBox>
     <ColorBox Color="#4d2e2e">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-      	To incidentally kill a sentient humanoid without intent. This includes manslaughter in self-defense and negligent manslaughter.
+      	To incidentally kill a sentient entity without intent. This includes manslaughter in self-defense and negligent manslaughter.
       </Box>
     </ColorBox>
     <ColorBox Color="#3b4354">
@@ -761,12 +772,12 @@
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Possession or Use of Significant Syndicate Contraband
+        Possession or Use of a Category 4 or 5 Controlled Item
       </Box>
     </ColorBox>
     <ColorBox Color="#2f3832">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To make, hold, or use Significant Syndicate contraband. Significant Syndicate contraband may only be used in emergencies, and only to prevent death or gross bodily harm. Significant Syndicate contraband is any Syndicate contraband that can be used to hinder the station or aid it's enemies in an obvious way. Any syndicate contraband that does not meet this definition is to be considered minor contraband.
+        To make, hold, or use contraband of tier 4 or above without authorization. Permits for these items can only be granted with a signature from Central Command.
       </Box>
     </ColorBox>
     <ColorBox Color="#2e422e">
@@ -796,7 +807,7 @@
     </ColorBox>
     <ColorBox>
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To unlawfully restrain, transport, control, or confine a sentient humanoid being against that individual's will. This is a catchall to cover any form of kidnapping or forced control.
+        To unlawfully restrain, transport, control, or confine a sentient entity against that entity's will. This is a catchall to cover any form of kidnapping or forced control.
       </Box>
     </ColorBox>
     <ColorBox Color="#4d2e2e">
@@ -816,7 +827,7 @@
     </ColorBox>
     <ColorBox Color="#4d2e2e">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To kill a sentient humanoid with malicious intent. If the victim must be revived, it is murder and not attempted murder.
+        To kill a sentient entity with malicious intent. If the victim must be revived, it is murder and not attempted murder.
       </Box>
     </ColorBox>
     <ColorBox Color="#475c7d">
@@ -836,7 +847,7 @@
     </ColorBox>
     <ColorBox>
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To consume any part of a sentient humanoid. Consumption of vital components should be treated more harshly. This can be charged on top of other charges such as Murder or Assault if the suspect committed these crimes to obtain the parts consumed.
+        To consume any part of a sentient entity. Consumption of vital components should be treated more harshly. This can be charged on top of other charges such as Murder or Assault if the suspect committed these crimes to obtain the parts consumed.
       </Box>
     </ColorBox>
   </Table>
@@ -901,7 +912,7 @@
     </ColorBox>
     <ColorBox Color="#4d2e2e">
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To kill three or more sentient humanoids with malicious intent. This only applies when there have been multiple killings with intention.
+        To kill three or more sentient entities with malicious intent. This only applies when there have been multiple killings with intention.
       </Box>
     </ColorBox>
   </Table>

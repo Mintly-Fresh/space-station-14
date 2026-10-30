@@ -11,7 +11,7 @@ using Content.Shared._Starlight.Medical.Surgery.Events;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Starlight.Actions.EntitySystems;
-public sealed class SurgeryActionSystem : EntitySystem
+public sealed partial class SurgeryActionSystem : EntitySystem
 {
         [Dependency] private SharedDoAfterSystem _doAfter = default!;
         [Dependency] private SharedBodySystem _body = default!;
@@ -33,7 +33,7 @@ public sealed class SurgeryActionSystem : EntitySystem
 
         foreach (var surgery in args.Surgeries)
         {
-            if(!_protoManager.TryIndex<EntityPrototype>(surgery, out var surgeryProto) || !surgeryProto.TryGetComponent<SurgeryComponent>(out var surgeryComp, _entityManager.ComponentFactory))
+            if(!_protoManager.TryIndex<EntityPrototype>(surgery, out var surgeryProto) || !surgeryProto.TryComp<SurgeryComponent>(out var surgeryComp, _entityManager.ComponentFactory))
                 continue;
             foreach (var bodypart in _body.GetBodyChildren(args.Performer).Where(part => args.BodyPartTypes.Contains(part.Component.PartType) && (args.BodyPartSymmetries.Contains(part.Component.Symmetry) || part.Component.Symmetry == BodyPartSymmetry.None)))
                 foreach (var step in surgeryComp.Steps)

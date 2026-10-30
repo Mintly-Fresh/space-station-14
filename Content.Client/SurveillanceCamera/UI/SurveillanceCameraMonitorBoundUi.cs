@@ -2,7 +2,6 @@ using Content.Client._Starlight.UserInterface; // Starlight
 using Content.Client.Eye;
 using Content.Shared.DeviceNetwork;
 using Content.Shared.SurveillanceCamera;
-using Robust.Client.UserInterface;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.SurveillanceCamera.UI;
@@ -38,10 +37,10 @@ public sealed class SurveillanceCameraMonitorBoundUserInterface : BoundUserInter
         _window.CameraDisconnect += OnCameraDisconnect;
 
         var xform = EntMan.GetComponent<TransformComponent>(Owner);
+        // Starlight - start
         var gridUid = xform.GridUid ?? xform.MapUid;
-
-        if (gridUid is not null)
-            _window?.SetMap(gridUid.Value);
+        _window?.SetMap(gridUid, Owner);
+        // Starlight - end
     }
 
     private void OnCameraSelected(string address, ProtoId<DeviceFrequencyPrototype>? subnet)

@@ -1,19 +1,17 @@
-namespace Content.Shared.Fluids;
+using Content.Shared._Funkystation.Footprints;
 
-/// <summary>
-/// For entities that can clean up puddles
-/// </summary>
+namespace Content.Shared.Fluids;
 public sealed partial class AbsorbentComponent : Component
 {
-
-    // Funky start - Footprints
-    [DataField]
-    public float FootprintCleaningRange = 0.2f;
-
     /// <summary>
-    /// How many footprints within FootprintCleaningRange can be cleaned at once.
+    /// Which footprint tiles are cleaned when this absorbent is used on a footprint.
     /// </summary>
     [DataField]
-    public int MaxCleanedFootprints = 9;
-    // Funky end
+    public FootprintCleaningPattern FootprintCleaning = FootprintCleaningPattern.Target;
+
+    /// <summary>
+    /// Whether cleaning a wall also cleans stained walls on the eight surrounding tiles.
+    /// </summary>
+    [DataField]
+    public bool CleanAdjacentWallStains;
 }

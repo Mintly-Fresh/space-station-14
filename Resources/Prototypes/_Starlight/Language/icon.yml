@@ -238,11 +238,18 @@
     state: squeakish
   allowSelection: false
 
-  - type: jobIcon
+- type: jobIcon
+  parent: JobIcon
+  id: LanguageIconCommunist
+  icon:
+    sprite: /Textures/_Starlight/Interface/language_icon.rsi
+    state: communist
+  allowSelection: false
+
+- type: jobIcon
   parent: JobIcon
   id: LanguageIconVespic
   icon:
     sprite: /Textures/_Starlight/Interface/language_icon.rsi
     state: vespic
   allowSelection: false
-

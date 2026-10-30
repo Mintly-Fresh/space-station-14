@@ -4,6 +4,10 @@
   name: arachnid cybernetic heart
   suffix: Neo-Arachnid
   components:
+  - type: Tag
+    tags:
+    - Meat
+    - Heart
   - type: Sprite
     state: heart-on
   - type: Item
@@ -14,3 +18,14 @@
     maxReagents: 2
     metabolizerTypes: [ Arachnid, Neocyte ]
     stages: [ Bloodstream ]
+
+- type: entity
+  id: OrganNeoArachnidTongue
+  parent: OrganNeocyteTongue
+  suffix: Neo-Arachnid
+  components:
+  - type: OrganTongue
+    sounds:
+      Male: NeoArachnidMSounds
+      Female: NeoArachnidFSounds
+      Unsexed: NeoArachnidMSounds

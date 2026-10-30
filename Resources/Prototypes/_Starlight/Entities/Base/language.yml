@@ -31,6 +31,8 @@
       - Felyaic
       - Lagomorphian
       - Squeakish
+      - ClassicalSign
+      - CygniStandard
       - Vespic
 
 - type: entity
@@ -70,6 +72,8 @@
       - Felyaic
       - Lagomorphian
       - Squeakish
+      - ClassicalSign
+      - CygniStandard
       - Vespic
 
 - type: entity
@@ -121,6 +125,8 @@
       - Vespic
       - Xeno
       - Xenomind
+      - ClassicalSign
+      - CygniStandard
 
 - type: entity
   id: BaseXenoBorgiLanguages
@@ -161,3 +167,5 @@
       - Squeakish
       - Vespic
       - Xeno
+      - ClassicalSign
+      - CygniStandard

@@ -79,7 +79,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
             return;
         }
 
-        _stationAiSystem.TryWarpEyeToCoordinates(actor, coordinates);
+        _stationAiSystem.TryWarpEyeToCoordinates((actor, null), coordinates);
     }
     #endregion
 
@@ -505,6 +505,18 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
             }
         }
 
+        // Starlight Start
+        // Makes the consumer tab actually show the power usage of the consumers, instead of just showing 0
+        else if (device.Group == PowerMonitoringConsoleGroup.Consumer)
+        {
+            if (TryComp<PowerConsumerComponent>(uid, out var consumer))
+            {
+                stats.PowerValue = consumer.ReceivedPower;
+                stats.PowerUsage = consumer.DrawRate;
+            }
+        }
+        // Starlight End
+
         // Master devices add the power values from all entities they represent (if applicable)
         if (device.IsCollectionMasterOrChild && device.IsCollectionMaster)
         {
@@ -895,6 +907,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
             {
                 var name = MetaData(master).EntityPrototype?.Name ?? MetaData(master).EntityName;
                 metaData.EntityName = Loc.GetString("power-monitoring-window-object-array", ("name", name), ("count", childCount + 1));
+                metaData.EntityNameIsLocalized = true; // Starlight: Prevent re-localization
             }
 
             else
@@ -1004,6 +1017,7 @@ internal sealed partial class PowerMonitoringConsoleSystem : SharedPowerMonitori
                 {
                     name = MetaData(ent).EntityPrototype?.Name ?? MetaData(ent).EntityName;
                     metaData.EntityName = Loc.GetString("power-monitoring-window-object-array", ("name", name), ("count", entDevice.ChildDevices.Count + 1));
+                    metaData.EntityNameIsLocalized = true; // Starlight: Prevent re-localization
                 }
             }
 

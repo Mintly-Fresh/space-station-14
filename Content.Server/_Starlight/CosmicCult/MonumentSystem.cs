@@ -6,8 +6,6 @@ using Content.Server.Atmos.Components;
 using Content.Server.Audio;
 using Content.Server.Chat.Systems;
 using Content.Server._Starlight.Shuttles;
-using Content.Server.Spawners.Components;
-using Content.Server.Spawners.EntitySystems;
 using Content.Shared._Starlight.CCVar;
 using Content.Shared._Starlight.CosmicCult;
 using Content.Shared._Starlight.CosmicCult.Components;
@@ -25,7 +23,6 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Content.Shared.Damage.Systems;
-using Robust.Shared.Serialization.Markdown.Mapping;
 using SpawnOnDespawnComponent = Content.Shared._Starlight.Spawners.Components.SpawnOnDespawnComponent;
 using Content.Shared.Verbs;
 using Robust.Shared.Utility;
@@ -376,6 +373,13 @@ public sealed partial class MonumentSystem : SharedMonumentSystem
         {
             objectiveComp.Tier = 1;
         }
+
+        //add the move action
+        var leaderQuery = EntityQueryEnumerator<CosmicCultLeadComponent>();
+        while (leaderQuery.MoveNext(out var leader, out var leaderComp))
+        {
+            _actions.AddAction(leader, ref leaderComp.CosmicMonumentMoveActionEntity, leaderComp.CosmicMonumentMoveAction, leader);
+        }
     }
 
     public void MonumentTier2(Entity<MonumentComponent> uid)
@@ -407,13 +411,6 @@ public sealed partial class MonumentSystem : SharedMonumentSystem
             cultComp.EntropyBudget += (int)Math.Floor(Math.Round((double)cult.Comp.TotalCrew / 100 * 10)); // pity system. 10% of the playercount worth of entropy on tier up
 
             Dirty(cultist, cultComp);
-        }
-
-        //add the move action
-        var leaderQuery = EntityQueryEnumerator<CosmicCultLeadComponent>();
-        while (leaderQuery.MoveNext(out var leader, out var leaderComp))
-        {
-            _actions.AddAction(leader, ref leaderComp.CosmicMonumentMoveActionEntity, leaderComp.CosmicMonumentMoveAction, leader);
         }
 
         Dirty(uid);

@@ -71,7 +71,7 @@
   - Scarves # Starlight
   - Pins # Starlight
   - Pens # Starlight
-  #- PassengerJobTrinkets
+  - AssistantJobTrinkets # Starlight
   - GroupSpeciesBreathTool
 
 - type: roleLoadout
@@ -125,7 +125,7 @@
   - Scarves # Starlight
   - Pins # Starlight
   - Pens # Starlight
-  #- ChefJobTrinkets
+  - ChefJobTrinkets # Starlight (uncommented)
   - GroupSpeciesBreathTool
 
 - type: roleLoadout
@@ -163,6 +163,7 @@
 
 - type: roleLoadout
   id: JobChaplain
+  canCustomizeName: true
   groups:
   - GroupTankHarness
   - ChaplainHead
@@ -216,7 +217,7 @@
   - Scarves # Starlight
   - Pins # Starlight
   - Pens # Starlight
-  #- BotanistJobTrinkets
+  - BotanistJobTrinkets # Starlight (uncommented)
   - GroupSpeciesBreathTool
 
 - type: roleLoadout
@@ -397,6 +398,7 @@
   - AtmosphericTechnicianBackpack
   - AtmosphericTechnicianOuterClothing
   - AtmosphericTechnicianShoes
+  - AtmosphericTechnicianID # Starlight
   - SurvivalExtended
   - Trinkets
   - Scarves # Starlight
@@ -578,8 +580,9 @@
   id: JobReporter
   groups:
   - GroupTankHarness
-  - ReporterHead # Starlight
   - ReporterJumpsuit
+  - ReporterHead
+  - ReporterOuterClothing
   - CommonBackpack
   - CivilianShoes # Starlight
   - Glasses

@@ -284,10 +284,10 @@
     - map: [ "head" ]
     - map: [ "pocket1" ]
     - map: [ "pocket2" ]
-    - map: [ "clownedon" ]
-      sprite: "_Starlight/Effects/creampie.rsi"
-      state: "creampie_resomi"
-      visible: false
+  - type: CreamPied
+    sprite:
+      sprite: _Starlight/Effects/creampie.rsi
+      state: creampie_resomi
   - type: Tag
     tags:
     - CanPilot
@@ -300,10 +300,6 @@
     - SiliconEmotesFH
     - NotLabelable
   - type: Vocal
-    sounds:
-      Male: NeoResomiMSounds
-      Female: NeoResomiFSounds
-      Unsexed: NeoResomiMSounds
 
 - type: entity
   parent: BaseSpeciesDummy
@@ -361,10 +357,6 @@
     - map: [ "head" ]
     - map: [ "pocket1" ]
     - map: [ "pocket2" ]
-    - map: [ "clownedon" ]
-      sprite: "_Starlight/Effects/creampie.rsi"
-      state: "creampie_resomi"
-      visible: false
   - type: Inventory
     speciesId: resomi #to be replaced with proto[species] when new sprites are made
     templateId: neocyte

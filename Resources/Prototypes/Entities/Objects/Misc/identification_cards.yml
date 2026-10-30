@@ -1000,6 +1000,8 @@
     - sprite: *icon-rsi
       offset: *icon-offset
       state: Syndicate
+  - type: IdCard
+    jobIcon: JobIconSyndicate
   - type: Item
     heldPrefix: black
   - type: Access
@@ -1071,7 +1073,7 @@
     listNumber: false
 
 - type: entity
-  parent: [ IDCardStandard, BaseHighlyIllegalContraband ]
+  parent: [ BaseContrabandTier4, IDCardStandard ] # Blimpuf
   id: NinjaIDCard
   name: ninja ID card
   suffix: Ninja

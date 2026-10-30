@@ -6,14 +6,11 @@ using Content.Client.Gameplay;
 using Content.Client.Hands;
 using Content.Client.Interaction;
 using Content.Client.Outline;
-using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.Actions.Controls;
 using Content.Client.UserInterface.Systems.Actions.Widgets;
 using Content.Client.UserInterface.Systems.Actions.Windows;
 using Content.Client.UserInterface.Systems.Gameplay;
-using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
-using Content.Shared.Charges.Systems;
 using Content.Shared.Input;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
@@ -106,6 +103,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             _actionsSystem.OnActionAdded += OnActionAdded;
             _actionsSystem.OnActionRemoved += OnActionRemoved;
             _actionsSystem.ActionsUpdated += OnActionsUpdated;
+            StartSettling(); // Starlight
         }
 
         UpdateFilterLabel();
@@ -260,6 +258,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             return;
 
         _actions.Add(action);
+        QueueSortIfSettling(); // Starlight
     }
 
     private void OnActionRemoved(EntityUid actionId)
@@ -284,6 +283,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
     private void OnActionsUpdated()
     {
         QueueWindowUpdate();
+        QueueSortIfSettling(); // Starlight
 
         if (_actionsSystem != null)
             _container?.SetActionData(_actionsSystem, _actions.ToArray());
@@ -439,6 +439,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (_actionsSystem == null)
             return;
 
+        _userArranged = true; // Starlight
         int position;
 
         if (actionId == null)
@@ -710,6 +711,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (_actionsSystem == null)
             return;
 
+        _userArranged = true; // Starlight
         _actions.Clear();
         foreach (var assign in assignments)
         {
@@ -745,6 +747,22 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         _menuDragHelper.Update(args.DeltaSeconds);
         if (_window is {UpdateNeeded: true})
             SearchAndDisplay();
+        // Starlight start
+        // improve sorting and race condition handling that was here before to hopefully work properly and be more consistent.
+        if (_sortQueued && _actionsSystem != null)
+        {
+            _sortQueued = false;
+            if (!_userArranged)
+            {
+                LoadDefaultActions();
+                _container?.SetActionData(_actionsSystem, _actions.ToArray());
+                QueueWindowUpdate();
+            }
+        }
+
+        if (_settling && AllActionsArrived())
+            _settling = false;
+        // Starlight end
     }
 
     private void OnComponentLinked(ActionsComponent component)
@@ -752,6 +770,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (_actionsSystem == null)
             return;
 
+        StartSettling(); // Starlight
         LoadDefaultActions();
         _container?.SetActionData(_actionsSystem, _actions.ToArray());
         QueueWindowUpdate();
@@ -770,7 +789,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             return;
 
         var actions = _actionsSystem.GetClientActions().Where(action => action.Comp.AutoPopulate).ToList();
-        actions.Sort(ActionComparer);
+        actions.Sort(_actionsSystem.ActionComparer); // Starlight edit
 
         _actions.Clear();
         foreach (var (action, _) in actions)

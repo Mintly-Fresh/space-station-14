@@ -75,6 +75,7 @@
   - TacticalMaidGloves
   - JanitorMaidOutfit
   - JanitorMaidOutfitMini
+  - EdgerunnerJacket
   - CoderSocks
   - PawBootTrinket
   - CatEars
@@ -127,6 +128,7 @@
   - PillCanisterPsicodine
   - ClothingDogTags
   - PersonalAI
+  - ClothingMaskBreathTube
   - GoldenPersonalAI # Starlight end
   - AACTablet # DeltaV
 
@@ -197,6 +199,7 @@
   loadouts:
   - CaptainHead
   - CaptainCap
+  - CapBeret # Starlight
 
 - type: loadoutGroup
   id: CaptainJumpsuit
@@ -280,7 +283,7 @@
   - HoPSatchel # Starlight
   - HoPDuffel # Starlight
   - HoPBackpackIan
-  - LeatherSatchel # starlight
+  - LeatherSatchel # Starlight
 
 - type: loadoutGroup
   id: HoPOuterClothing
@@ -365,7 +368,7 @@
   loadouts:
   - AssistantGloves
   - AssistantMittens # Starlight
-  - GreyGloves #starlight
+  - GreyGloves # starlight
 
 - type: loadoutGroup
   id: CommonBackpack
@@ -406,6 +409,16 @@
   - WhiteShoes
   - WinterBoots
   - Heels # 🌟Starlight🌟
+
+# Starlight-start
+- type: loadoutGroup
+  id: AssistantJobTrinkets
+  name: loadout-group-jobtrinkets
+  minLimit: 0
+  loadouts:
+  - Soap
+  - RubberStampAssistant
+# Starlight-end
 
 - type: loadoutGroup
   id: BartenderHead
@@ -481,11 +494,14 @@
   - ChefWintercoat
   - ChefJacketSenior # Starlight
 
-#- type: loadoutGroup
-#  id: ChefJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
+# Starlight start (uncommented)
+- type: loadoutGroup
+  id: ChefJobTrinkets
+  name: loadout-group-jobtrinkets
+  minLimit: 0
+  loadouts:
+  - ChefGoldenButchCleaver #Starlight
+# Starlight end (uncommented)
 
 - type: loadoutGroup
   id: LibrarianJumpsuit
@@ -604,7 +620,6 @@
   - BibleEdda
   - BibleKoans
   - BibleLiberChaotica
-  - BibleMalleus
   - BibleOrthodox
   - BiblePrincipiaDiscordia
   - BibleHadith
@@ -687,11 +702,14 @@
   - BotanistApron
   - BotanistWintercoat
 
-#- type: loadoutGroup
-#  id: BotanistJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
+# Starlight start (uncommented)
+- type: loadoutGroup
+  id: BotanistJobTrinkets
+  name: loadout-group-jobtrinkets
+  minLimit: 0
+  loadouts:
+  - BotanistGoldenClippers #Starlight
+# Starlight end (uncommented)
 
 - type: loadoutGroup
   id: ClownHead
@@ -700,6 +718,7 @@
   loadouts:
   - JesterHat
   - JesterAltHat
+  - ClownMitre
 
 - type: loadoutGroup
   id: ClownJumpsuit
@@ -1216,6 +1235,15 @@
   - EngineeringWinterBoots
   - Heels # 🌟Starlight🌟
 
+- type: loadoutGroup
+  id: AtmosphericTechnicianID
+  minLimit: 1
+  defaultSelected: 1
+  name: loadout-group-atmospheric-technician-id
+  loadouts:
+    - AtmosPDA
+    - SeniorAtmosPDA # Starlight
+
 #- type: loadoutGroup
 #  id: AtmosphericTechnicianJobTrinkets
 #  name: loadout-group-jobtrinkets
@@ -1245,6 +1273,7 @@
   minLimit: 0
   loadouts:
   - ResearchDirectorBeret
+  - ResearchDirectorBeretRD # Starlight
 
 - type: loadoutGroup
   id: ResearchDirectorNeck
@@ -1646,6 +1675,24 @@
   - ReporterJumpsuit
   - ReporterJumpskirt
   - JournalistJumpsuit
+  - JournalistJumpskirt # Starlight
+
+- type: loadoutGroup
+  id: ReporterHead
+  name: loadout-group-reporter-head
+  minLimit: 0
+  loadouts:
+  - ReporterPressFedora
+  - ReporterHeadphonesJob # Starlight
+  - ReporterHeadphonesGeneric # Starlight
+  - ReporterHeadphonesHighEnd # Starlight
+
+- type: loadoutGroup
+  id: ReporterOuterClothing
+  name: loadout-group-reporter-outerclothing
+  minLimit: 0
+  loadouts:
+  - ReporterPressVest
 
 #- type: loadoutGroup
 #  id: ReporterJobTrinkets

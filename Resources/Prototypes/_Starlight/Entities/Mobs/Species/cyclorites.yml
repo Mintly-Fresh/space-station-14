@@ -3,6 +3,12 @@
   id: BaseMobCyclorite
   abstract: true
   components:
+  - type: SocialInteractionReceiver
+    interactionOverrides: # cyclorites don't have noses
+    - id: Boop
+      interactString: booping-rocky-success
+      messagePerceivedByOthers: booping-rocky-success-others
+      emoteMessage: booping-rocky-emote
   - type: LanguageKnowledge
     speaks:
     - GalacticCommon
@@ -77,10 +83,6 @@
       90: 0.5 # 0.75 w/ Speed Modifier Scale, 60% of base health based on BaseMobSpecies
       120: 0 # 0.5 w/ Speed Modifier Scale, 80% of base health based on BaseMobSpecies
   - type: Vocal
-    sounds:
-      Male: MaleCyclorite
-      Female: FemaleCyclorite
-      Unsexed: MaleCyclorite
   - type: Crawler
     standTime: 4
     knockdownDamageThreshold: 10

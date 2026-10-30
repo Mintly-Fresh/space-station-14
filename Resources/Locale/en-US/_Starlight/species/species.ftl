@@ -2,6 +2,7 @@
 species-name-avali = Avali
 species-name-cyclorite = Cyclorite
 species-name-doll = Doll
+species-custom-name-doll = Creature of Flesh
 species-name-elf = Aielith
 species-name-felionoid = Felionoid
 species-name-lagomorph = Lagomorph
@@ -9,4 +10,7 @@ species-name-resomi = Resomi
 species-name-shadekin = Shadekin
 species-name-thaven = Thaven
 species-name-rodentia = Rodentia
+species-name-experiment = Experiment
 species-name-vespuli = Vespuli
+
+species-name-sawian = Sawian

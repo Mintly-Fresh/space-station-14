@@ -428,6 +428,7 @@
   conditions:
     - !type:WallmountCondition {}
 
+- type: construction
   id: HoneyCombWall
   name: construction-honeycomb-wall
   graph: HoneyCombWall

@@ -417,6 +417,17 @@
   objectType: Item
 
 - type: construction
+  id: PluralFlag
+  graph: PluralFlagGraph
+  startNode: start
+  targetNode: pluralflag
+  category: construction-category-structures
+  placementMode: SnapgridCenter
+  objectType: Structure
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition {}
+
   id: HoneyCombWall
   name: construction-honeycomb-wall
   graph: HoneyCombWall

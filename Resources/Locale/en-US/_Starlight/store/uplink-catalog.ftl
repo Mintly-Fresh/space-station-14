@@ -52,6 +52,8 @@ uplink-forensics-implant-name = Forensics Implant
 uplink-forensics-implant-desc = A cybernetic implant for hands. Removes an agent's fingerprints so as to not leave evidence of a crime. Does not work through gloves. (Warning: You will need a surgical assistant for the procedure.)
 uplink-syndie-implant-name = Syndicate Agent Implant
 uplink-syndie-implant-desc = A cybernetic eye implant. Enables an agent to see information about the station crew, humanoids and syndicate without any glasses. (Warning: You will need a surgical assistant for the procedure.)
+uplink-nuke-op-robotkit-name = CyberSun Robotic Treatment Kit
+uplink-nuke-op-robotkit-desc = The best robotic medical kit money can buy. Features an advanced industrial welder, some HV cables, oil packs, and a microreactor cell.
 
 uplink-uzi-bundle-name = Type U3 Uzi Bundle
 uplink-uzi-bundle-desc = Contains the Type U3 Uzi, with two additional magazines.
@@ -164,6 +166,9 @@ uplink-estoc-desc = A designated marksman rifle, fitted with a mid-range optic f
 
 uplink-plushie-linari-name = linari miun plushie
 uplink-plushie-linari-desc = An expertly crafted plush lizard in tactical officer gear, absent from the standard NanoTrasen catalogues. The stitching on the back says "Property of the Syndicate." Holding it makes you feel like you're breaking at least three corporate regulations.
+
+uplink-bombroach-microbomb-name = Bombroach Teleporter
+uplink-bombroach-microbomb-desc = Call in a handy bombroach equipped with a picobomb implant. Explodes on death or when triggered by the bombroach.
 
 # These are from funky, but funky puts them in Wizden files, so in our files they go then
 uplink-hidden-radio-botany-name = Hidden Uplink

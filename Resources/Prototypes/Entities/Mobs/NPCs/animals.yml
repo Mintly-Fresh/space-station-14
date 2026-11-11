@@ -1797,15 +1797,6 @@
   parent: MobBaseSyndicateMonkey
   suffix: NukeOps
   components:
-  # Starlight-Start
-  - type: LanguageSpeaker
-  - type: LanguageKnowledge
-    speaks:
-    - Ancestor
-    understands:
-    - Ancestor
-    - GalacticCommon
-  # Starlight-End
   - type: NukeOperative
 
 - type: entity
@@ -1846,8 +1837,8 @@
     interactSuccessString: petting-success-monkey
     interactFailureString: petting-failure-monkey
     interactSuccessSpawn: EffectHearts
-    #interactSuccessSound: # Starlight, can't use this due to copyright
-    #  path: /Audio/Animals/lizard_happy.ogg # Starlight
+    interactSuccessSound:
+      path: /Audio/Animals/lizard_happy.ogg
     interactFailureSound:
       path: /Audio/Items/wirecutter.ogg
   - type: MobThresholds
@@ -2368,8 +2359,8 @@
     interactSuccessString: petting-success-reptile
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
-    #interactSuccessSound: # Starlight, can't use this due to copyright
-    #  path: /Audio/Animals/lizard_happy.ogg # Starlight
+    interactSuccessSound:
+      path: /Audio/Animals/lizard_happy.ogg
   - type: Bloodstream
     bloodReferenceSolution:
       reagents:
